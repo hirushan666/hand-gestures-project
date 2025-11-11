@@ -17,7 +17,7 @@ class MouseLauncher(QWidget):
         self.start_button.clicked.connect(self.run_gesture_mouse)
         layout.addWidget(self.start_button)
 
-        # Stop button
+    
         self.stop_button = QPushButton("Stop Gesture Mouse")
         self.stop_button.clicked.connect(self.stop_gesture_mouse)
         layout.addWidget(self.stop_button)
