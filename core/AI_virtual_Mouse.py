@@ -129,6 +129,18 @@ while True:
             time.sleep(1)
             break
 
+    # minimize
+    if fingers == [1, 0, 0, 0, 1] :
+        pyautogui.hotkey('win', 'm')
+        time.sleep(1.5)
+        cv2.putText(img, "→ Minimize", (200, 100),
+            cv2.FONT_HERSHEY_SIMPLEX, 1.2, (0, 255, 0), 3)
+    # close   
+    if (fingers == [1, 1, 0, 0, 1] or fingers == [1, 0, 0, 1, 1]):
+        pyautogui.hotkey('ctrl', 'w')
+        time.sleep(2)
+        cv2.putText(img, "→ Minimize", (200, 100),
+            cv2.FONT_HERSHEY_SIMPLEX, 1.2, (0, 255, 0), 3)
 
 
     cTime = time.time()

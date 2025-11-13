@@ -30,9 +30,6 @@ cap.set(4, hCam)
 detector = htm.handDetector(maxHands=1)
 wScr, hScr = autopy.screen.size()
 double_click_done = False 
-prev_x = 0
-slide_change_time = 0
-cooldown = 1.0
 # print(wScr, hScr)
 
 while True:
@@ -68,7 +65,7 @@ while True:
     cv2.rectangle(img, (frameR, frameR), (wCam - frameR, hCam - frameR),
     (255, 0, 255), 2)
     # 4. Only Index Finger : Moving Mode
-    if fingers[1] == 1 and fingers[2] == 0:
+    if fingers[1] == 1 :
         # 5. Convert Coordinates
         x3 = np.interp(x1, (frameR, wCam - frameR), (0, wScr))
         y3 = np.interp(y1, (frameR, hCam - frameR), (0, hScr))
@@ -80,33 +77,17 @@ while True:
         autopy.mouse.move(wScr - clocX, clocY)
         cv2.circle(img, (x1, y1), 15, (255, 0, 255), cv2.FILLED)
         plocX, plocY = clocX, clocY
+
+    if fingers == [0, 0, 0, 0, 0]:
         
-    # 8. Both Index and middle fingers are up : Clicking Mode
-    if fingers[1] == 1 and fingers[2] == 1:
-        # 9. Find distance between fingers
-        length, img, lineInfo = detector.findDistance(8, 12, img)
-        # print(length)
-        # 10. Click mouse if distance short
-        if length < 20:
-            cv2.circle(img, (lineInfo[4], lineInfo[5]), 15, (0, 255, 0),
-            cv2.FILLED)
-            mouse.click('left')
-            time.sleep(0.25) # add a small delay to prevent multiple clicks
-    if fingers == [0, 1, 1, 0, 0]:
-        pyautogui.press('right')
-        time.sleep(1.5)
-        cv2.putText(img, "→ Next Slide", (200, 100),
-            cv2.FONT_HERSHEY_SIMPLEX, 1.2, (0, 255, 0), 3)
-               
-
-            # ✌️ Two fingers up → Previous Slide
-    elif fingers == [0, 1, 1, 1, 0]:
-        pyautogui.press('left')
-        time.sleep(1.5)
-        cv2.putText(img, "← Previous Slide", (150, 100),
-            cv2.FONT_HERSHEY_SIMPLEX, 1.2, (0, 0, 255), 3)
-
-
+        pyautogui.mouseDown(button='left') 
+        time.sleep(0.5)  # single press for drag
+        
+        cv2.putText(img, "Dragging...", (20, 100),
+        cv2.FONT_HERSHEY_PLAIN, 2, (0, 0, 255), 2)
+    elif fingers == [1, 1, 1, 1, 1]:  # All fingers up
+        mouse.release('left')  # Release the left mouse button
+        cv2.putText(img, "Released", (20, 100), cv2.FONT_HERSHEY_PLAIN, 2, (0, 255, 0), 2)    
     if len(lmList) > 4:  # make sure landmarks exist
         thumb_tip_y = lmList[4][2]
         thumb_base_y = lmList[3][2]
@@ -118,7 +99,16 @@ while True:
             time.sleep(1)
             break
 
-
+    if fingers[1] == 1 and fingers[2] == 1:
+        # 9. Find distance between fingers
+        length, img, lineInfo = detector.findDistance(8, 12, img)
+        # print(length)
+        # 10. Click mouse if distance short
+        if length < 20:
+            cv2.circle(img, (lineInfo[4], lineInfo[5]), 15, (0, 255, 0),
+            cv2.FILLED)
+            mouse.click('left')
+            time.sleep(0.25) # add a small delay to prevent multiple clicks
 
 
     cTime = time.time()
@@ -135,4 +125,8 @@ while True:
         break
 
 cap.release()
-cv2.destroyAllWindows()            
+cv2.destroyAllWindows()
+
+ #https://poki.com/en/g/bowling-champion
+
+ #https://poki.com/en/g/stupid-zombies
