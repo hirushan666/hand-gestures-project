@@ -36,7 +36,136 @@ class InstructionWindow(QWidget):
         layout.addWidget(label)
         self.setLayout(layout)
 
+# ----------------------------------------------------------
+#  Normal mode INSTRUCTION WINDOW
+# ----------------------------------------------------------
+class InstructionWindowNormal(QWidget):
+    def __init__(self, launcher):
+        super().__init__()
+        self.launcher = launcher       # store reference to MouseLauncher
 
+        self.setWindowTitle("Normal Mouse Instructions")
+        self.setGeometry(650, 350, 450, 500)
+        self.setStyleSheet("""
+            QWidget {
+                background-color: #1e1e2f;
+                color: #f2f2f2;
+                font-family: 'Segoe UI';
+            }
+            QTextEdit {
+                background-color: #2c2c40;
+                border-radius: 8px;
+                padding: 10px;
+                color: #f2f2f2;
+                font-size: 13px;
+            }
+        """)
+
+        layout = QVBoxLayout()
+
+        label = QLabel("📘 Normal Mouse Instructions")
+        label.setFont(QFont("Segoe UI", 14, QFont.Bold))
+        label.setAlignment(Qt.AlignCenter)
+        layout.addWidget(label)
+
+        gif_label = QLabel()
+        gif_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "assets", "test.gif"))
+        movie = QMovie(gif_path)
+        gif_label.setMovie(movie)
+        movie.start()
+        gif_label.setAlignment(Qt.AlignCenter)
+        layout.addWidget(gif_label)
+
+        instructions = QTextEdit()
+        instructions.setReadOnly(True)
+        instructions.setText(
+            "Welcome to Gaming Mouse Launcher!\n\n"
+            "👉 Modes available:\n"
+            "1️⃣ Gesture Mode – Control with hand gestures.\n"
+            "2️⃣ Normal Mode – Standard control.\n"
+            "3️⃣ Presentation Mode – Slide/navigation.\n"
+            "4️⃣ Gaming Mode – High-speed sensitivity.\n\n"
+            "🖱 Use STOP button to terminate any mode.\n"
+            "⚙ Make sure camera and environment are configured."
+        )
+        layout.addWidget(instructions)
+
+        self.btn_normal_start = QPushButton("🧭 Start Normal Mode"
+                                            )
+        self.btn_normal_start.clicked.connect(self.start_normal_mode)
+        layout.addWidget(self.btn_normal_start)
+
+        self.setLayout(layout)
+
+    def start_normal_mode(self):
+            self.launcher.stop_process()
+            self.launcher.launch_mode("normal_mode.py", "Normal Mode")
+# ----------------------------------------------------------
+#  Gesture mode INSTRUCTION WINDOW
+# ----------------------------------------------------------
+class InstructionWindowGesture(QWidget):
+    def __init__(self, launcher):
+        super().__init__()
+        self.launcher = launcher       # store reference to MouseLauncher
+
+        self.setWindowTitle("Gesture Mouse Instructions")
+        self.setGeometry(650, 350, 450, 500)
+        self.setStyleSheet("""
+            QWidget {
+                background-color: #1e1e2f;
+                color: #f2f2f2;
+                font-family: 'Segoe UI';
+            }
+            QTextEdit {
+                background-color: #2c2c40;
+                border-radius: 8px;
+                padding: 10px;
+                color: #f2f2f2;
+                font-size: 13px;
+            }
+        """)
+
+
+
+        layout = QVBoxLayout()
+
+        label = QLabel("📘 Gesture Mouse Instructions")
+        label.setFont(QFont("Segoe UI", 14, QFont.Bold))
+        label.setAlignment(Qt.AlignCenter)
+        layout.addWidget(label)
+        
+        gif_label = QLabel()
+        gif_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "assets", "test.gif"))
+        movie = QMovie(gif_path)
+        gif_label.setMovie(movie)
+        movie.start()
+        gif_label.setAlignment(Qt.AlignCenter)
+        layout.addWidget(gif_label)
+
+        instructions = QTextEdit()
+        instructions.setReadOnly(True)
+        instructions.setText(
+            "Welcome to Gaming Mouse Launcher!\n\n"
+            "👉 Modes available:\n"
+            "1️⃣ Gesture Mode – Control with hand gestures.\n"
+            "2️⃣ Normal Mode – Standard control.\n"
+            "3️⃣ Presentation Mode – Slide/navigation.\n"
+            "4️⃣ Gaming Mode – High-speed sensitivity.\n\n"
+            "🖱 Use STOP button to terminate any mode.\n"
+            "⚙ Make sure camera and environment are configured."
+        )
+        layout.addWidget(instructions)
+
+        self.btn_gesture_start = QPushButton("🖐 Start Gesture Mode"
+                                             )
+        self.btn_gesture_start.clicked.connect(self.start_gesture_mode)
+        layout.addWidget(self.btn_gesture_start)
+
+        self.setLayout(layout)
+
+    def start_gesture_mode(self):
+            self.launcher.stop_process()
+            self.launcher.launch_mode("AI_virtual_Mouse.py", "Gesture Mode")
 # ----------------------------------------------------------
 #  PRESENTATION INSTRUCTION WINDOW
 # ----------------------------------------------------------
@@ -284,12 +413,12 @@ class MouseLauncher(QWidget):
 
     # Mode functions
     def run_gesture_mouse(self):
-        self.stop_process()
-        self.launch_mode("AI_virtual_Mouse.py", "Gesture Mode")
+        self.instruction_window = InstructionWindowGesture(self)
+        self.instruction_window.show()
 
     def run_normal_mode(self):
-        self.stop_process()
-        self.launch_mode("normal_mode.py", "Normal Mode")
+        self.instruction_window = InstructionWindowNormal(self)
+        self.instruction_window.show()
 
     def run_presentation_mode(self):
         self.instruction_window = InstructionWindowPresentation(self)
